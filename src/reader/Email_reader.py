@@ -3,7 +3,7 @@ from pathlib import Path
 
 class EmailReader:
     def __init__(self, filename: str):
-        self.filename = filename
+        self.filename = filename if filename.endswith(".txt") else filename + ".txt"
         self.path = Path(filename)
     def read_email(self) -> Email:
         with open(self.path) as file:
