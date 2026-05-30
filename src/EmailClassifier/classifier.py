@@ -22,7 +22,7 @@ class Classifier:
         
 
         result = max(finalScore.items(), key= lambda x: x[1])
-
-        if result[1] == 0:
+        # Придумать если несколько одинаковых
+        if result[1] == 0: 
             return "нераспределен"
         return result[0]
