@@ -54,7 +54,8 @@ class EmailReader:
         return Email(sender, 
                      recipient, 
                      theme, 
+                     date, # Дата может быть в разных форматах, сложно распарсить
                      self.filename,
                      None, # Неизвестно, отправлено или получено
                      body)
-            
+
