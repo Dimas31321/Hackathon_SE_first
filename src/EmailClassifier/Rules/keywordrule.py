@@ -5,7 +5,6 @@ class KeywordRule(Rule):
 
     def __init__(self, categories: dict):
         self.keywords = dict() # привязка слова к категории
-        self.scoring = dict() # словарь с результам
         self.scoretabel = dict() ## слово - его вес
 
         for word in categories.keys():
@@ -26,6 +25,8 @@ class KeywordRule(Rule):
 
 
     def score(self, email):
+        scoring = dict()
+
         text = email.body
         text = text.lower().replace(",", " ")
         text = text.replace(".", " ")
@@ -36,9 +37,6 @@ class KeywordRule(Rule):
         for word in text:
             if word in self.keywords:
                 for cat in self.keywords[word]:
-                    self.scoring[cat] += self.scoretabel[word]
+                    scoring[cat] += self.scoretabel[word]
 
-        out = self.scoring
-        self.scoring = dict() # сброс для возможности переиспользования   
-           
-        return out
+        return scoring
