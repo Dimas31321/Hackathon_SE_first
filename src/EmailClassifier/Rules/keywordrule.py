@@ -8,7 +8,7 @@ class KeywordRule(Rule):
         self.scoretabel = dict() ## слово - его вес
         self.list = list() #категории
 
-        for cat in categories.keys:
+        for cat in categories.keys():
             self.list.append(cat)
 
         for cat, words in categories.items():
@@ -36,7 +36,7 @@ class KeywordRule(Rule):
         text = text.split()
 
         for cat in self.list:
-            self.scoring[word] = 0
+            scoring[cat] = 0
 
         for word in text:
             if word in self.keywords:
