@@ -19,6 +19,6 @@ class Email:
                f"Theme: {self.theme}\n" \
                f"Filename: {self.filename}\n" \
                f"Body: {self.body}\n" \
-               f"Category: {self.category}\n" \
+               f"Categories: {self.categories}\n" \
                f"Date: {self.date}"
 
