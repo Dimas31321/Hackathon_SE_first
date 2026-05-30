@@ -20,4 +20,9 @@ class Classifier:
                 else:
                     finalScore[cat] = value
         
-        return max(finalScore.items(), key= lambda x: x[1])[0]
+
+        result = max(finalScore.items(), key= lambda x: x[1])
+
+        if result[1] == 0:
+            return "нераспределен"
+        return result[0]
