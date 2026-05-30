@@ -38,5 +38,7 @@ class KeywordRule(Rule):
                 for cat in self.keywords[word]:
                     self.scoring[cat] += self.scoretabel[word]
 
-        
-        return self.scoring
+        out = self.scoring
+        self.scoring = dict() # сброс для возможности переиспользования   
+           
+        return out
