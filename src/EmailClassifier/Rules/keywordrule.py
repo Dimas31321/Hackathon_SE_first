@@ -6,9 +6,10 @@ class KeywordRule(Rule):
     def __init__(self, categories: dict):
         self.keywords = dict() # привязка слова к категории
         self.scoretabel = dict() ## слово - его вес
+        self.list = list() #категории
 
-        for word in categories.keys():
-            self.scoring[word] = 0
+        for cat in categories.keys:
+            self.list.append(cat)
 
         for cat, words in categories.items():
             for item in words:
@@ -33,6 +34,9 @@ class KeywordRule(Rule):
         text = text.replace("'", " ")
         text = text.replace('"', " ")
         text = text.split()
+
+        for cat in self.list:
+            self.scoring[word] = 0
 
         for word in text:
             if word in self.keywords:
