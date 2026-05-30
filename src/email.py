@@ -12,7 +12,7 @@ class Email:
         self.date = date
         self.filename = filename
         self.body = body
-        self.categories = categories
+        self.categories = categories if categories is not None else []
     def __str__(self):
         return f"From: {self.sender}\n" \
                f"To: {self.recipient}\n" \
