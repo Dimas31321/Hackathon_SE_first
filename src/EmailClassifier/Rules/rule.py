@@ -1,6 +1,6 @@
 from abc import ABC, abstractclassmethod
 
-from src.Email import Email
+from src.email import Email
 
 
 

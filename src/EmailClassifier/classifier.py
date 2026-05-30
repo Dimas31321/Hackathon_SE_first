@@ -1,6 +1,6 @@
 from typing import List
 
-from src.Email import Email
+from src.email import Email
 from src.EmailClassifier.Rules.rule import Rule
 
 
