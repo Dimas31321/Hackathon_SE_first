@@ -8,7 +8,7 @@ class Classifier:
     def __init__(self, rules: List[Rule]):
         self.rules = rules
         self.min_value = 0 # минимальное совпадение для добавления
-        self.a = 0.6 # некоторый коэффициент, для только максимальных - 1
+        self.a = 0.6 # некоторый коэффициент, для только максимальных ставить 1
 
     def classify(self, email: Email):
         finalScore = dict()
