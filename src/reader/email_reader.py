@@ -18,16 +18,50 @@ class EmailReader:
             data = self._read_txt_file()
         elif self.filename.endswith(".json"):
             data = self._read_json_file()
+        elif self.filename.endswith(".bin"):
+            data = self._read_bin_file()
         else:
             print(
                 f"Неподдерживаемый формат файла '{self.filename}'. "
-                f"Поддерживаются только .txt и .json."
+                f"Поддерживаются только .txt, .json и .bin."
             )
             return None
         if data is None or len(data) == 0:
             return None
         else:
             return self._build_email(data)
+        
+    def _read_bin_file(self) -> None | list[str]:
+        try:
+            with open(self.path, 'rb') as file:
+                content = file.read()
+                try:
+                    text = content.decode('utf-8')
+                except UnicodeDecodeError:
+                    text = content.decode("cp1251")
+                    
+                return text.splitlines(keepends=True)
+        # TODO: Добавить обработку других кодировок. Проверить работает ли
+        except FileNotFoundError:
+            print(f"Файл '{self.filename}' не найден.")
+            return None
+        
+        except PermissionError:
+            print(f"Нет доступа к файлу '{self.filename}'.")
+            return None
+        
+        except IsADirectoryError:
+            print(f"'{self.filename}' является директорией, а не файлом.")
+            return None
+        
+        except UnicodeDecodeError:
+            print(f"Ошибка декодирования файла '{self.filename}'.")
+            return None
+        
+        except Exception as e:
+            print(f"Произошла ошибка при чтении файла '{self.filename}': {e}.")
+            return None
+        
         
     def _read_txt_file(self) -> list[str] | None:
         try:
@@ -147,4 +181,3 @@ class EmailReader:
                         body
                     )
         # TODO: Добавить обработку других полей. Также расмотреть другие форматы файлов. 
-
