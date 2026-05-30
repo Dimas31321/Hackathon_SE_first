@@ -1,10 +1,18 @@
 from src.Email import Email
 from pathlib import Path
+import re
 
 class EmailReader:
+
     def __init__(self, filename: str):
         self.filename = filename if filename.endswith(".txt") else filename + ".txt"
         self.path = Path(filename)
+
+    def _extract_address(self, address_str: str):
+        if match := re.search(r'<(.*?)>', address_str):
+            return match.group(1)
+        return address_str
+
     def read_email(self) -> Email:
         try:
             with open(self.path, 'r') as file:
@@ -34,13 +42,17 @@ class EmailReader:
             clean_line = line.strip()
             if clean_line.startswith("From:"):
                 sender = clean_line[5:].strip() # Проверить 
+                sender = self._extract_address(sender)
             elif clean_line.startswith("От кого:"):
                 sender = clean_line[8:].strip()
+                sender = self._extract_address(sender)
             # Рассмотреть и добавить другие варианты
             elif clean_line.startswith("To:"):
                 recipient = clean_line[3:].strip() if len(clean_line) > 0 else None
+                recipient = self._extract_address(recipient)
             elif clean_line.startswith("Кому:"):
                 recipient = clean_line[6:].strip() if len(clean_line) > 0 else None
+                recipient = self._extract_address(recipient)
             elif clean_line.startswith("Subject:"):
                 theme = clean_line[8:].strip() if len(clean_line) > 0 else None
             elif clean_line.startswith("Тема:"):
