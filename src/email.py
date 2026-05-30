@@ -2,14 +2,14 @@ class Email:
     def __init__(self, sender: str, 
                  recipient: str, 
                  theme: str, 
-                 data: str,
+                 date: str,
                  filename: str,
                  body: str = "",
                  category: str = None):
         self.sender = sender
         self.recipient = recipient
         self.theme = theme
-        self.data = data
+        self.date = date
         self.filename = filename
         self.body = body
         self.category = category
