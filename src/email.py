@@ -5,20 +5,26 @@ class Email:
                  date: str,
                  filename: str,
                  body: str = "",
-                 categories: list[str] = []):
+                 categories: list[str] | None = None):
         self.sender = sender
         self.recipient = recipient
         self.theme = theme
         self.date = date
         self.filename = filename
         self.body = body
-        self.categories = categories
+        self.categories = categories if categories is not None else []
+
     def __str__(self):
         return f"From: {self.sender}\n" \
                f"To: {self.recipient}\n" \
                f"Theme: {self.theme}\n" \
                f"Filename: {self.filename}\n" \
                f"Body: {self.body}\n" \
-               f"Category: {self.category}\n" \
+               f"Categories: {self.categories}\n" \
                f"Date: {self.date}"
+    def add_category(self, category: str) -> bool:
+        if category not in self.categories:
+            self.categories.append(category)
+            return True
+        return False
 
