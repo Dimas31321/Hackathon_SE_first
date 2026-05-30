@@ -115,7 +115,7 @@ class EmailReader:
                     lines.append(f"Дата: {data['Дата']}")
                 if "body" in data:
                     lines.append(data["body"])
-                elif "text" in data: # Добавить аналоги на русском
+                elif "text" in data: # TODO: Добавить аналоги на русском
                     lines.append(data["text"])
 
                 return lines
@@ -157,7 +157,7 @@ class EmailReader:
                 sender = clean_line[5:].strip() # Проверить 
             elif clean_line.startswith("От кого:") and not sender:
                 sender = clean_line[8:].strip()
-            # Рассмотреть и добавить другие варианты
+            # TODO: Рассмотреть и добавить другие варианты
             elif clean_line.startswith("To:") and not recipient:
                 recipient = clean_line[3:].strip() if len(clean_line) > 0 else None
             elif clean_line.startswith("Кому:") and not recipient:
@@ -165,7 +165,7 @@ class EmailReader:
             elif clean_line.startswith("Subject:") and not theme:
                 theme = clean_line[8:].strip() if len(clean_line) > 0 else None
             elif clean_line.startswith("Тема:") and not theme:
-            # Рассмотреть и добавить другие вариант
+            # TODO: Рассмотреть и добавить другие вариант
                 theme = clean_line[5:].strip() if len(clean_line) > 0 else None
             elif (clean_line.startswith("Date:") 
                   or clean_line.startswith("Дата:")) and not date:
