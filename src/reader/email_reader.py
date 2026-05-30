@@ -1,11 +1,14 @@
+import re
 from src.email import Email
 from pathlib import Path
 import json
+
 
 class EmailReader:
     def __init__(self, filename: str):
         self.filename = filename # Filename следует вводить с раширением, например "email.txt"
         self.path = Path(filename)
+
     def read_email(self) -> Email | None:
         if not self.path.exists():
             print(f"Файл '{self.filename}' не найден.")
@@ -14,6 +17,7 @@ class EmailReader:
         if self.path.is_dir():
             print(f"'{self.filename}' является директорией, а не файлом.")
             return None
+
         if self.filename.endswith(".txt"):
             data = self._read_txt_file()
         elif self.filename.endswith(".json"):
@@ -26,10 +30,16 @@ class EmailReader:
                 f"Поддерживаются только .txt, .json и .bin."
             )
             return None
+
         if data is None or len(data) == 0:
             return None
         else:
             return self._build_email(data)
+    
+    def _extract_address(self, address_str: str) -> str:
+        if match := re.search(r'<(.*?)>', address_str):
+            return match.group(1).strip()
+        return address_str.strip()
         
     def _read_bin_file(self) -> None | list[str]:
         try:
@@ -41,6 +51,7 @@ class EmailReader:
                     text = content.decode("cp1251")
                     
                 return text.splitlines(keepends=True)
+
         # TODO: Добавить обработку других кодировок. Проверить работает ли
         except FileNotFoundError:
             print(f"Файл '{self.filename}' не найден.")
@@ -62,11 +73,14 @@ class EmailReader:
             print(f"Произошла ошибка при чтении файла '{self.filename}': {e}.")
             return None
         
-        
     def _read_txt_file(self) -> list[str] | None:
         try:
-            with open(self.path, 'r') as file:
-                return file.readlines()
+            try:
+                with open(self.path, 'r', encoding='utf-8') as file: # Проверить кодировку
+                    return file.readlines()
+            except UnicodeDecodeError:
+                with open(self.path, 'r', encoding='cp1251') as file:
+                    return file.readlines()
                 
         except FileNotFoundError:
             print(f"Файл '{self.filename}' не найден.")
@@ -90,33 +104,47 @@ class EmailReader:
             
     def _read_json_file(self) -> None | list[str] | dict:
         try:
-            with open(self.path, 'r') as file:
-                data = json.load(file)
+            try:
+                with open(self.path, 'r', encoding='utf-8') as file:
+                    data = json.load(file)
+            except UnicodeDecodeError:
+                with open(self.path, 'r', encoding='cp1251') as file:
+                    data = json.load(file)
+
             if isinstance(data, list):
                 return data
             
             if isinstance(data, dict):
                 lines = []
+
                 if "From" in data:
-                    lines.append(f"From: {data['From']}")
+                    lines.append(f"From: {data['From']}\n")
                 elif "От кого" in data:
-                    lines.append(f"От кого: {data['От кого']}")
+                    lines.append(f"От кого: {data['От кого']}\n")
+
                 if "To" in data:
-                    lines.append(f"To: {data['To']}")
+                    lines.append(f"To: {data['To']}\n")
                 elif "Кому" in data:
-                    lines.append(f"Кому: {data['Кому']}")
+                    lines.append(f"Кому: {data['Кому']}\n")
+
                 if "Subject" in data:
-                    lines.append(f"Subject: {data['Subject']}")
+                    lines.append(f"Subject: {data['Subject']}\n")
                 elif "Тема" in data:
-                    lines.append(f"Тема: {data['Тема']}")
+                    lines.append(f"Тема: {data['Тема']}\n")
+
                 if "Date" in data:
-                    lines.append(f"Date: {data['Date']}")
+                    lines.append(f"Date: {data['Date']}\n")
                 elif "Дата" in data:
-                    lines.append(f"Дата: {data['Дата']}")
+                    lines.append(f"Дата: {data['Дата']}\n")
+
                 if "body" in data:
                     lines.append(data["body"])
-                elif "text" in data: # TODO: Добавить аналоги на русском
+                elif "text" in data: 
                     lines.append(data["text"])
+                elif "Текст" in data:
+                    lines.append(data["Текст"])
+                elif "Сообщение" in data:
+                    lines.append(data["Сообщение"])
 
                 return lines
             
@@ -140,44 +168,70 @@ class EmailReader:
             print(f"Ошибка декодирования файла '{self.filename}'.")
             return None
         
+        except json.JSONDecodeError:
+            print(f"Некорректный JSON в файле '{self.filename}'.")
+            return None
+        
         except Exception as e:
             print(f"Произошла ошибка при чтении файла '{self.filename}': {e}.")
             return None
     
     def _build_email(self, lines: list[str]) -> Email:
-        sender: str =""
+        sender: str = ""
         recipient: str = ""
         theme: str = ""
-        sent_or_received: str = ""
         body: str = ""
         date: str = ""
+
         for line in lines:
             clean_line = line.strip()
             if clean_line.startswith("From:") and not sender: 
-                sender = clean_line[5:].strip() # Проверить 
+                sender = self._extract_address(
+                    clean_line[len("From:"):].strip()
+                ) # Проверить 
+                
             elif clean_line.startswith("От кого:") and not sender:
-                sender = clean_line[8:].strip()
-            # TODO: Рассмотреть и добавить другие варианты
+                sender = self._extract_address(
+                    clean_line[len("От кого:"):].strip()
+                )
+
+            # Рассмотреть и добавить другие варианты
             elif clean_line.startswith("To:") and not recipient:
-                recipient = clean_line[3:].strip() if len(clean_line) > 0 else None
+                recipient = self._extract_address(
+                    clean_line[len("To:"):].strip()
+                )
+
             elif clean_line.startswith("Кому:") and not recipient:
-                recipient = clean_line[6:].strip() if len(clean_line) > 0 else None
+                recipient = self._extract_address(
+                    clean_line[len("Кому:"):].strip()
+                )
+
             elif clean_line.startswith("Subject:") and not theme:
-                theme = clean_line[8:].strip() if len(clean_line) > 0 else None
+                theme = clean_line[len("Subject:"):].strip()
+
             elif clean_line.startswith("Тема:") and not theme:
-            # TODO: Рассмотреть и добавить другие вариант
-                theme = clean_line[5:].strip() if len(clean_line) > 0 else None
-            elif (clean_line.startswith("Date:") 
-                  or clean_line.startswith("Дата:")) and not date:
-                date = clean_line[5:].strip() 
+                # Рассмотреть и добавить другие вариант
+                theme = clean_line[len("Тема:"):].strip()
+
+            elif clean_line.startswith("Date:") and not date:
+                date = clean_line[len("Date:"):].strip()
+
+            elif clean_line.startswith("Дата:") and not date:
+                date = clean_line[len("Дата:"):].strip()
+
             else:
                 body += line
+
+        sender = sender if len(sender) >0 else "Unknown"
+        recipient = recipient if len(recipient) >0 else "Unknown"
+        theme = theme if len(theme) >0 else "No theme"
+        date = date if len(date) >0 else "Unknown"
         return Email(
-                        sender,
-                        recipient,
-                        theme,
-                        date,
-                        self.filename,
-                        body
-                    )
-        # TODO: Добавить обработку других полей. Также расмотреть другие форматы файлов. 
+            sender,
+            recipient,
+            theme,
+            date,
+            self.filename,
+            body
+        )
+        # TODO: Добавить обработку других полей. Также рассмотреть другие форматы файлов.
