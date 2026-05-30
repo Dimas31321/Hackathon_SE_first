@@ -12,7 +12,12 @@ class KeywordRule(Rule):
             self.scoring[word] = 0
 
         for cat, words in categories.items():
-            for i, value in words:
+            for item in words:
+                if isinstance(item, tuple):    
+                    i, value = item
+                else:
+                    i = item
+                    value = 1
                 self.scoretabel[i] = value
                 if i in self.keywords:
                     self.keywords[i].append(cat)
