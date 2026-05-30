@@ -2,22 +2,29 @@ class Email:
     def __init__(self, sender: str, 
                  recipient: str, 
                  theme: str, 
-                 data: str,
+                 date: str,
                  filename: str,
                  body: str = "",
-                 category: str = None):
+                 categories: list[str] | None = None):
         self.sender = sender
         self.recipient = recipient
         self.theme = theme
-        self.data = data
+        self.date = date
         self.filename = filename
         self.body = body
-        self.category = category
+        self.categories = categories if categories is not None else []
+
     def __str__(self):
         return f"From: {self.sender}\n" \
                f"To: {self.recipient}\n" \
                f"Theme: {self.theme}\n" \
                f"Filename: {self.filename}\n" \
                f"Body: {self.body}\n" \
-               f"Category: {self.category}\n" \
-               f"Data: {self.data}"
+               f"Categories: {self.categories}\n" \
+               f"Date: {self.date}"
+    def add_category(self, category: str) -> bool:
+        if category not in self.categories:
+            self.categories.append(category)
+            return True
+        return False
+
