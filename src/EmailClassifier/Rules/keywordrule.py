@@ -4,7 +4,7 @@ from src.EmailClassifier.Rules.rule import Rule
 class KeywordRule(Rule):
 
     def __init__(self, categories: dict):
-        self.keywords = dict() # привязка слова к категории
+        self.keywords = categories
         self.scoretabel = dict() ## слово - его вес
         self.list = list() #категории
 
@@ -19,24 +19,20 @@ class KeywordRule(Rule):
                     i = item
                     value = 1
                 self.scoretabel[i] = value
-                if i in self.keywords:
-                    self.keywords[i].append(cat)
-                else:
-                    self.keywords[i] = [cat]
 
 
     def score(self, email):
         scoring = dict()
 
         text = email.body
-        text = text.lower().replace(",", " ")
-        text = text.replace(".", " ")
-        text = text.replace("'", " ")
-        text = text.replace('"', " ")
-        text = text.split()
 
         for cat in self.list:
             scoring[cat] = 0
+
+        for cat in self.list:
+            for word in self.keywords[cat]:
+                scoring[cat] += text.count(word) * self.scoretabel[word]
+
 
         for word in text:
             if word in self.keywords:
