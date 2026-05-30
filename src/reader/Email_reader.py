@@ -6,8 +6,24 @@ class EmailReader:
         self.filename = filename if filename.endswith(".txt") else filename + ".txt"
         self.path = Path(filename)
     def read_email(self) -> Email:
-        with open(self.path) as file:
-            lines = file.readlines()
+        try:
+            with open(self.path, 'r') as file:
+                lines = file.readlines()
+        except FileNotFoundError:
+            print(f"Файл '{self.filename}' не найден.")
+            return None
+        except PermissionError:
+            print(f"Нет доступа к файлу '{self.filename}'.")
+            return None
+        except IsADirectoryError:
+            print(f"'{self.filename}' является директорией, а не файлом.")
+            return None
+        except UnicodeDecodeError:
+            print(f"Ошибка декодирования файла '{self.filename}'.")
+            return None
+        except Exception as e:
+            print(f"Произошла ошибка при чтении файла '{self.filename}': {e}.")
+            return None
         sender: str
         recipient: str
         theme: str
