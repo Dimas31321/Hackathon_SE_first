@@ -21,3 +21,5 @@ class Email:
                f"Body: {self.body}\n" \
                f"Category: {self.category}\n" \
                f"Data: {self.data}"
+               
+# от кого кому тема дата тело название 
