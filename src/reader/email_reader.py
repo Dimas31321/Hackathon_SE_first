@@ -121,31 +121,29 @@ class EmailReader:
                     lines.append(f"From: {data['From']}\n")
                 elif "От кого" in data:
                     lines.append(f"От кого: {data['От кого']}\n")
+                elif "Ot Kogo" in data:
+                    lines.append(f"Ot Kogo: {data['Ot Kogo']}\n")
 
                 if "To" in data:
                     lines.append(f"To: {data['To']}\n")
                 elif "Кому" in data:
                     lines.append(f"Кому: {data['Кому']}\n")
+                elif "Komu" in data:
+                    lines.append(f"Komu: {data['Komu']}\n")
 
                 if "Subject" in data:
                     lines.append(f"Subject: {data['Subject']}\n")
                 elif "Тема" in data:
                     lines.append(f"Тема: {data['Тема']}\n")
+                elif "Tema" in data:
+                    lines.append(f"Tema: {data['Tema']}\n")
 
                 if "Date" in data:
                     lines.append(f"Date: {data['Date']}\n")
                 elif "Дата" in data:
                     lines.append(f"Дата: {data['Дата']}\n")
-
-                if "body" in data:
-                    lines.append(data["body"])
-                elif "text" in data: 
-                    lines.append(data["text"])
-                elif "Текст" in data:
-                    lines.append(data["Текст"])
-                elif "Сообщение" in data:
-                    lines.append(data["Сообщение"])
-
+                elif "Data" in data:
+                    lines.append(f"Data: {data['Data']}\n")
                 return lines
             
             print(f"Некорректная структура JSON в файле '{self.filename}'.")
@@ -185,38 +183,38 @@ class EmailReader:
 
         for line in lines:
             clean_line = line.strip()
-            if clean_line.startswith("From:") and not sender: 
+            if clean_line.lower().startswith("from:") and not sender: 
                 sender = self._extract_address(
                     clean_line[len("From:"):].strip()
                 ) # Проверить 
                 
-            elif clean_line.startswith("От кого:") and not sender:
+            elif (clean_line.lower().startswith("от кого:") or clean_line.lower().startswith("ot kogo"))and not sender:
                 sender = self._extract_address(
                     clean_line[len("От кого:"):].strip()
                 )
 
             # Рассмотреть и добавить другие варианты
-            elif clean_line.startswith("To:") and not recipient:
+            elif clean_line.lower().startswith("to:") and not recipient:
                 recipient = self._extract_address(
                     clean_line[len("To:"):].strip()
                 )
 
-            elif clean_line.startswith("Кому:") and not recipient:
+            elif (clean_line.lower().startswith("кому:") or   clean_line.lower().startswith("komu:"))and not recipient:
                 recipient = self._extract_address(
                     clean_line[len("Кому:"):].strip()
                 )
 
-            elif clean_line.startswith("Subject:") and not theme:
+            elif (clean_line.lower().startswith("subject:"))and not theme:
                 theme = clean_line[len("Subject:"):].strip()
 
-            elif clean_line.startswith("Тема:") and not theme:
+            elif (clean_line.lower().startswith("тема:") or clean_line.lower().startswith("tema:")) and not theme:
                 # Рассмотреть и добавить другие вариант
                 theme = clean_line[len("Тема:"):].strip()
 
-            elif clean_line.startswith("Date:") and not date:
+            elif (clean_line.lower().startswith("date:")) and not date:
                 date = clean_line[len("Date:"):].strip()
 
-            elif clean_line.startswith("Дата:") and not date:
+            elif (clean_line.lower().startswith("дата:") or clean_line.lower().startswith("data:")) and not date:
                 date = clean_line[len("Дата:"):].strip()
 
             else:

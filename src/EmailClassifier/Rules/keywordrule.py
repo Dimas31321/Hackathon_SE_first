@@ -1,37 +1,35 @@
 from src.EmailClassifier.Rules.rule import Rule
-# входящие, отправленные, спам, важные, черновики
 
 class KeywordRule(Rule):
 
     def __init__(self, categories: dict):
-        self.keywords = dict() # привязка слова к категории
-        self.scoring = dict() # словарь с результам
+        self.keywords = categories
         self.scoretabel = dict() ## слово - его вес
+        self.list = list() #категории
 
-        for word in categories.keys():
-            self.scoring[word] = 0
+        for cat in categories.keys():
+            self.list.append(cat)
 
         for cat, words in categories.items():
-            for i, value in words:
-                self.scoretabel[i] = value
-                if i in self.keywords:
-                    self.keywords[i].append(cat)
+            for item in words:
+                if isinstance(item, tuple):    
+                    i, value = item
                 else:
-                    self.keywords[i] = [cat]
+                    i = item
+                    value = 1
+                self.scoretabel[i] = value
 
 
     def score(self, email):
+        scoring = dict()
+
         text = email.body
-        text = text.lower().replace(",", " ")
-        text = text.replace(".", " ")
-        text = text.replace("'", " ")
-        text = text.replace('"', " ")
-        text = text.split()
 
-        for word in text:
-            if word in self.keywords:
-                for cat in self.keywords[word]:
-                    self.scoring[cat] += self.scoretabel[word]
+        for cat in self.list:
+            scoring[cat] = 0
 
-        
-        return self.scoring
+        for cat in self.list:
+            for word in self.keywords[cat]:
+                scoring[cat] += text.count(word)
+
+        return scoring
