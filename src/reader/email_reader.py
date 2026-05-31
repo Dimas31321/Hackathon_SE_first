@@ -121,31 +121,29 @@ class EmailReader:
                     lines.append(f"From: {data['From']}\n")
                 elif "От кого" in data:
                     lines.append(f"От кого: {data['От кого']}\n")
+                elif "Ot Kogo" in data:
+                    lines.append(f"Ot Kogo: {data['Ot Kogo']}\n")
 
                 if "To" in data:
                     lines.append(f"To: {data['To']}\n")
                 elif "Кому" in data:
                     lines.append(f"Кому: {data['Кому']}\n")
+                elif "Komu" in data:
+                    lines.append(f"Komu: {data['Komu']}\n")
 
                 if "Subject" in data:
                     lines.append(f"Subject: {data['Subject']}\n")
                 elif "Тема" in data:
                     lines.append(f"Тема: {data['Тема']}\n")
+                elif "Tema" in data:
+                    lines.append(f"Tema: {data['Tema']}\n")
 
                 if "Date" in data:
                     lines.append(f"Date: {data['Date']}\n")
                 elif "Дата" in data:
                     lines.append(f"Дата: {data['Дата']}\n")
-
-                if "body" in data:
-                    lines.append(data["body"])
-                elif "text" in data: 
-                    lines.append(data["text"])
-                elif "Текст" in data:
-                    lines.append(data["Текст"])
-                elif "Сообщение" in data:
-                    lines.append(data["Сообщение"])
-
+                elif "Data" in data:
+                    lines.append(f"Data: {data['Data']}\n")
                 return lines
             
             print(f"Некорректная структура JSON в файле '{self.filename}'.")
