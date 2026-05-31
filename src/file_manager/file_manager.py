@@ -15,7 +15,7 @@ class Manager:
     def _copy(source_path: Path, category: str):
         name = source_path.name
         file_path = Manager.path / category / name
-        if file_path.exists:
+        if file_path.exists():
             logging.warning(f"{file_path} уже существует.")
             return
         file_path.parent.mkdir(parents=True, exist_ok=True)
