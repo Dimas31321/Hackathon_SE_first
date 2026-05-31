@@ -144,6 +144,12 @@ class EmailReader:
                     lines.append(f"Дата: {data['Дата']}\n")
                 elif "Data" in data:
                     lines.append(f"Data: {data['Data']}\n")
+                if "Body" in data:
+                    lines.append(f"\n{data['Body']}")
+                elif "Тело" in data:
+                    lines.append(f"\n{data['Тело']}")
+                elif "BodyText" in data:
+                    lines.append(f"\n{data['BodyText']}")
                 return lines
             
             print(f"Некорректная структура JSON в файле '{self.filename}'.")
