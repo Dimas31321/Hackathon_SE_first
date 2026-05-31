@@ -10,11 +10,11 @@ BODY_TEXT = (
 
 def create_test_email():
     return Email(
-        sender="s.volkov@partner.ru",
+        sender="uniqueguy@company.com",
         recipient="it-support@company.ru",
-        theme="URGENT: Запрос от внешнего пользователя",
-        date="03.04.2025 11:08",
-        filename="mail_0001.txt",
+        theme="Не работает принтер",
+        date="25.05.2025 05:55",
+        filename="somemail.txt",
         body=BODY_TEXT
     )
 
@@ -22,11 +22,11 @@ def create_test_email():
 def test_email_initialization():
     email = create_test_email()
 
-    assert email.sender == "s.volkov@partner.ru"
+    assert email.sender == "uniqueguy@company.com"
     assert email.recipient == "it-support@company.ru"
-    assert email.date == "03.04.2025 11:08"
-    assert email.theme == "URGENT: Запрос от внешнего пользователя"
-    assert email.filename == "mail_0001.txt"
+    assert email.date == "25.05.2025 05:55"
+    assert email.theme == "Не работает принтер"
+    assert email.filename == "somemail.txt"
     assert email.body == BODY_TEXT
     assert email.categories == []
 
@@ -52,13 +52,21 @@ def test_email_add_duplicate_category():
 
 def test_email_str():
     email = create_test_email()
-
     assert str(email) == (
-        "From: s.volkov@partner.ru\n"
+        "From: uniqueguy@company.com\n"
         "To: it-support@company.ru\n"
-        "Theme: URGENT: Запрос от внешнего пользователя\n"
-        "Filename: mail_0001.txt\n"
+        "Theme: Не работает принтер\n"
+        "Filename: somemail.txt\n"
         f"Body: {BODY_TEXT}\n"
         "Categories: []\n"
-        "Date: 03.04.2025 11:08"
+        "Date: 25.05.2025 05:55"
     )
+    
+def test_categories_are_independent():
+    email1 = create_test_email()
+    email2 = create_test_email()
+
+    email1.add_category("Urgent")
+
+    assert email1.categories == ["Urgent"]
+    assert email2.categories == []
