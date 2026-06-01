@@ -1,7 +1,7 @@
 import os #работа с файлами и папками
 from email import Email #данные письма
-from reader import EmailReader #считывает письма с файлов
-from manager import Manager #раскладывает письма по папкам
+from reader.email_reader import EmailReader #считывает письма с файлов
+from file_manager.file_manager import Manager #раскладывает письма по папкам
 import logging
 Inbox = "inbox"
 Types = "types"
