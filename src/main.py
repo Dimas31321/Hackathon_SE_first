@@ -22,12 +22,12 @@ failed_mails = []
 for filename in os.listdir(Inbox):
     filepath = os.path.join(Inbox, filename)
     if not os.path.isfile(filepath):
-        logging.warning(f"'{filepath}' является директорией, а не файлом. Пропускаем.")
+        logging.error(f"'{filepath}' является директорией, а не файлом. Пропускаем.")
         continue #проверка на всякий случай
     reader = EmailReader(filepath)
     email = reader.read_email()
     if email is None:
-        logging.warning("ERROR: ошика чтения письма из файла " + filepath)
+        logging.error("ERROR: ошика чтения письма из файла " + filepath)
         pass
     else:
         logging.info(f"ACCEPT: from {email.sender}, theme: {email.theme}")
