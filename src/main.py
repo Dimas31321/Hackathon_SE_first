@@ -1,0 +1,50 @@
+import os #работа с файлами и папками
+from email import Email #данные письма
+from reader import EmailReader #считывает письма с файлов
+from manager import Manager #раскладывает письма по папкам
+import logging
+Inbox = "inbox"
+Types = "types"
+Out = "out"
+categories = {}
+for filename in os.listdir(Types):
+    category_name = filename[:-4]
+    filepath = os.path.join(Types, filename)
+    with open(filepath, "r", encoding="utf-8") as file:
+        keywords = []
+        for line in file:
+            keyword = line.strip()
+            if keyword:
+                keywords.append(keyword)
+        categories[category_name] = keywords
+emails = []
+failed_mails = []
+for filename in os.listdir(Inbox):
+    filepath = os.path.join(Inbox, filename)
+    if not os.path.isfile(filepath):
+        continue #проверка на всякий случай
+    reader = EmailReader(filepath)
+    email = reader.read_email()
+    if email in None:
+        logging.error("     ERROR: не удалось прочитать")
+        pass
+    else:
+        print(f"    ACCEPT: from {email.sender}, theme: {email.theme}")
+        emails.append(email)
+for email in emails:
+    print(f"Got letter: {email.filename} \n")
+    general_text = email.theme + " " + email.body
+    scores = {}
+    for cat_name, words in categories.items():
+        count = 0
+        for word in words:
+            if word in general_text:
+                count+=1
+        if count>0:
+            scores[cat_name] = count
+            #print(f"In category {cat_name} was found {count} words")
+    if not scores:
+        email.categories = ["Другое"]
+    else:
+        best_variant = max(scores, key=scores.get())
+
