@@ -1,6 +1,6 @@
 import pytest
 from src.reader.email_reader import EmailReader
-
+from src.email import Email
 
 def test_email_from_txt_english_format(tmp_path):
     file = tmp_path / "test_mail_1.txt"

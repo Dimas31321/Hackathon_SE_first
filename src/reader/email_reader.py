@@ -2,20 +2,28 @@ import re
 from src.email import Email
 from pathlib import Path
 import json
+import logging
+logging.basicConfig(
+    filename="email_reader.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    encoding="utf-8"
+) # TODO: НЕ ЗАБЫТЬ УБРАТЬ!!!!!
 
-
+logger = logging.getLogger(__name__)
 class EmailReader:
     def __init__(self, filename: str):
         self.filename = filename # Filename следует вводить с раширением, например "email.txt"
         self.path = Path(filename)
 
     def read_email(self) -> Email | None:
+        logger.info(f"Начато чтение файла: {self.filename}")
         if not self.path.exists():
-            print(f"Файл '{self.filename}' не найден.")
+            logger.error(f"Файл '{self.filename}' не найден.")
             return None
         
         if self.path.is_dir():
-            print(f"'{self.filename}' является директорией, а не файлом.")
+            logger.error(f"'{self.filename}' является директорией, а не файлом.")
             return None
 
         if self.filename.endswith(".txt"):
@@ -25,7 +33,7 @@ class EmailReader:
         elif self.filename.endswith(".bin"):
             data = self._read_bin_file()
         else:
-            print(
+            logger.error(
                 f"Неподдерживаемый формат файла '{self.filename}'. "
                 f"Поддерживаются только .txt, .json и .bin."
             )
@@ -54,23 +62,23 @@ class EmailReader:
 
         # TODO: Добавить обработку других кодировок. Проверить работает ли
         except FileNotFoundError:
-            print(f"Файл '{self.filename}' не найден.")
+            logger.error(f"Файл '{self.filename}' не найден.")
             return None
         
         except PermissionError:
-            print(f"Нет доступа к файлу '{self.filename}'.")
+            logger.error(f"Нет доступа к файлу '{self.filename}'.")
             return None
         
         except IsADirectoryError:
-            print(f"'{self.filename}' является директорией, а не файлом.")
+            logger.error(f"'{self.filename}' является директорией, а не файлом.")
             return None
         
         except UnicodeDecodeError:
-            print(f"Ошибка декодирования файла '{self.filename}'.")
+            logger.error(f"Ошибка декодирования файла '{self.filename}'.")
             return None
         
         except Exception as e:
-            print(f"Произошла ошибка при чтении файла '{self.filename}': {e}.")
+            logger.error(f"Произошла ошибка при чтении файла '{self.filename}': {e}.")
             return None
         
     def _read_txt_file(self) -> list[str] | None:
@@ -83,23 +91,23 @@ class EmailReader:
                     return file.readlines()
                 
         except FileNotFoundError:
-            print(f"Файл '{self.filename}' не найден.")
+            logger.error(f"Файл '{self.filename}' не найден.")
             return None
         
         except PermissionError:
-            print(f"Нет доступа к файлу '{self.filename}'.")
+            logger.error(f"Нет доступа к файлу '{self.filename}'.")
             return None
         
         except IsADirectoryError:
-            print(f"'{self.filename}' является директорией, а не файлом.")
+            logger.error(f"'{self.filename}' является директорией, а не файлом.")
             return None
         
         except UnicodeDecodeError:
-            print(f"Ошибка декодирования файла '{self.filename}'.")
+            logger.error(f"Ошибка декодирования файла '{self.filename}'.")
             return None
         
         except Exception as e:
-            print(f"Произошла ошибка при чтении файла '{self.filename}': {e}.")
+            logger.error(f"Произошла ошибка при чтении файла '{self.filename}': {e}.")
             return None
             
     def _read_json_file(self) -> None | list[str] | dict:
@@ -152,32 +160,32 @@ class EmailReader:
                     lines.append(f"\n{data['BodyText']}")
                 return lines
             
-            print(f"Некорректная структура JSON в файле '{self.filename}'.")
+            logger.error(f"Некорректная структура JSON в файле '{self.filename}'.")
             return None
             # TODO: Проверить на наличие других полей, которые могут содержать тело письма
                 
         except FileNotFoundError:
-            print(f"Файл '{self.filename}' не найден.")
+            logger.error(f"Файл '{self.filename}' не найден.")
             return None
         
         except PermissionError:
-            print(f"Нет доступа к файлу '{self.filename}'.")
+            logger.error(f"Нет доступа к файлу '{self.filename}'.")
             return None
         
         except IsADirectoryError:
-            print(f"'{self.filename}' является директорией, а не файлом.")
+            logger.error(f"'{self.filename}' является директорией, а не файлом.")
             return None
         
         except UnicodeDecodeError:
-            print(f"Ошибка декодирования файла '{self.filename}'.")
+            logger.error(f"Ошибка декодирования файла '{self.filename}'.")
             return None
         
         except json.JSONDecodeError:
-            print(f"Некорректный JSON в файле '{self.filename}'.")
+            logger.error(f"Некорректный JSON в файле '{self.filename}'.")
             return None
         
         except Exception as e:
-            print(f"Произошла ошибка при чтении файла '{self.filename}': {e}.")
+            logger.error(f"Произошла ошибка при чтении файла '{self.filename}': {e}.")
             return None
     
     def _build_email(self, lines: list[str]) -> Email:
