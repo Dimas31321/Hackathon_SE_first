@@ -3,12 +3,6 @@ from src.email import Email
 from pathlib import Path
 import json
 import logging
-logging.basicConfig(
-    filename="email_reader.log",
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    encoding="utf-8"
-) # TODO: НЕ ЗАБЫТЬ УБРАТЬ!!!!!
 
 logger = logging.getLogger(__name__)
 class EmailReader:

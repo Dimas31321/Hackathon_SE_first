@@ -7,7 +7,6 @@ from src.EmailClassifier.classifier import Classifier
 from src.reader.email_reader import EmailReader #считывает письма с файлов
 from src.file_manager.file_manager import Manager #раскладывает письма по папкам
 from pathlib import Path
-from extended_src.query_sort import Query_sorter
 from src.EmailClassifier.keywords import keywords
 import logging
 logging.basicConfig(
@@ -17,6 +16,7 @@ logging.basicConfig(
     encoding="utf-8"
 )
 from src.EmailClassifier.keywords import senders
+all_emails = []
 base = Path(__file__).parent
 type_path = base / "types"
 inbox_path = base / "inbox"
@@ -51,6 +51,7 @@ for f_path in email_list:
         else:
             statistics[cat] = 1
     Manager.put(email)
+    all_emails.append(email)
     logging.info(f"DONE: {f_path.name} is in {categories}")
 for cat, count in statistics.items():
     logging.info(f"Category {cat} got {count} files...")
@@ -61,7 +62,8 @@ Manager.remove_empty_dirs() # удаление пустых папок посл�
 
 value = os.environ.get("NO_EXTENDED_VERSION")
 if not value:
-    query_sorter = Query_sorter()
+    from extended_src.query_sort import Query_sorter
+    query_sorter = Query_sorter(all_emails)
     while True:
         message = input("Введите сообщение для классификации (exit для выхода): ")
         if message.lower() == "exit" or message.lower() == "выход":

@@ -1,0 +1,19 @@
+services:
+  lite_version:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: lite-app
+    volumes:
+      - ./inbox:/app/inbox
+      - ./types:/app/types
+      - ./out:/app/out
+  expanded_version:
+      build:
+        context: .
+        dockerfile: Dockerfile
+        target: expanded-app
+      volumes:
+        - ./inbox:/app/inbox
+        - ./types:/app/types
+        - ./out:/app/out
