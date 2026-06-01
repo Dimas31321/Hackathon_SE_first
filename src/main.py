@@ -22,17 +22,17 @@ failed_mails = []
 for filename in os.listdir(Inbox):
     filepath = os.path.join(Inbox, filename)
     if not os.path.isfile(filepath):
+        logging.warning(f"'{filepath}' является директорией, а не файлом. Пропускаем.")
         continue #проверка на всякий случай
     reader = EmailReader(filepath)
     email = reader.read_email()
     if email is None:
-        logging.error("     ERROR: не удалось прочитать")
+        logging.warning("ERROR: ошика чтения письма из файла " + filepath)
         pass
     else:
-        print(f"    ACCEPT: from {email.sender}, theme: {email.theme}")
+        logging.info(f"ACCEPT: from {email.sender}, theme: {email.theme}")
         emails.append(email)
 for email in emails:
-    print(f"Got letter: {email.filename} \n")
     general_text = email.theme + " " + email.body
     scores = {}
     for cat_name, words in categories.items():
@@ -42,9 +42,8 @@ for email in emails:
                 count+=1
         if count>0:
             scores[cat_name] = count
-            #print(f"In category {cat_name} was found {count} words")
     if not scores:
         email.categories = ["Другое"]
     else:
-        best_variant = max(scores, key=scores.get())
+        best_variant = max(scores, key=scores.get)
 
