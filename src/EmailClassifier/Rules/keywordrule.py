@@ -1,5 +1,9 @@
 from src.EmailClassifier.Rules.rule import Rule
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 class KeywordRule(Rule):
 
     def __init__(self, categories: dict):
