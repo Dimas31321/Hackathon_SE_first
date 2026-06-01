@@ -7,7 +7,7 @@ from src.EmailClassifier.classifier import Classifier
 from src.reader.email_reader import EmailReader #считывает письма с файлов
 from src.file_manager.file_manager import Manager #раскладывает письма по папкам
 from pathlib import Path
-from src.EmailClassifier.keywords import keywords
+from src.EmailClassifier.keywords import loadKeywords, loadSenders
 import logging
 logging.basicConfig(
     filename="./out/main.log",
@@ -27,8 +27,8 @@ if type_path.exists() == False:
 if inbox_path.exists() == False:
     logging.error("ERROR: this inbox does not exist")
     sys.exit(1)
-keyrules = KeywordRule(keywords)
-senderrules = MailSenderRule(senders)
+keyrules = KeywordRule(loadKeywords())
+senderrules = MailSenderRule(loadSenders())
 classifire = Classifier(rules = [keyrules, senderrules])
 classifire.min_value = 1
 classifire.a = 1
