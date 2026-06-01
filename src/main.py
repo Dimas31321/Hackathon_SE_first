@@ -10,14 +10,15 @@ from pathlib import Path
 from src.EmailClassifier.keywords import keywords
 import logging
 logging.basicConfig(
-    filename="main.log",
+    filename="./out/main.log",
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     encoding="utf-8"
 )
 from src.EmailClassifier.keywords import senders
+print("BEGIN") ## для отладки, потом убрать
 all_emails = []
-base = Path(__file__).parent
+base = Path(".")
 type_path = base / "types"
 inbox_path = base / "inbox"
 if type_path.exists() == False:
@@ -31,10 +32,12 @@ senderrules = MailSenderRule(senders)
 classifire = Classifier(rules = [keyrules, senderrules])
 classifire.min_value = 1
 classifire.a = 1
-email_list = list(inbox_path.glob("*.txt") + 
-                  inbox_path.glob("*.bin") + 
-                  inbox_path.glob("*.json") + 
-                  inbox_path.glob("*.jpeg"))
+email_list = email_list = (
+    list(inbox_path.glob("*.txt")) +
+    list(inbox_path.glob("*.bin")) +
+    list(inbox_path.glob("*.json")) +
+    list(inbox_path.glob("*.jpeg"))
+)
 statistics = {}
 for f_path in email_list:
     reader = EmailReader(str(f_path))
