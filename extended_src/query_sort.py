@@ -16,7 +16,7 @@ except:
     raise FileNotFoundError(error_text)
 
 class Query_sorter:
-    def __init__(emails:list[Email]):
+    def __init__(self, emails:list[Email]):
         self.emails = emails
         email_texts = []
 
@@ -25,11 +25,11 @@ class Query_sorter:
 
         self.email_embeddings = list(model.embed(email_texts))
 
-    def query(query:str) -> list[Email]:
+    def query(self, query:str) -> list[Email]:
         query_embedding = list(model.embed([query]))
 
         cos_similarities = cosine_similarity(query_embedding, self.email_embeddings).flatten()
 
-        out = sorted(zip(cos_similarities, emails), key=lambda x: x[0])
+        out = sorted(zip(cos_similarities, self.emails), key=lambda x: -x[0])
         return [email for cos, email in out]
 

@@ -63,14 +63,15 @@ Manager.remove_empty_dirs() # удаление пустых папок посл�
 # Expanded version of main.py with embeddings
 
 value = os.environ.get("NO_EXTENDED_VERSION")
-if not value:
+if value == '0':
     from extended_src.query_sort import Query_sorter
     query_sorter = Query_sorter(all_emails)
     while True:
-        message = input("Введите сообщение для классификации (exit для выхода): ")
+        message = input("Введите сообщение для классификации (exit для выхода): ").strip()
         if message.lower() == "exit" or message.lower() == "выход":
             break
-        sorted_emails = query_sorter.sort(message)
+        num = int(input("Введите число сообщений что вы хотите увидеть: "))
+        sorted_emails = query_sorter.query(message)
         print("Найдены следующие письма по теме запроса:")
-        for email in sorted_emails:
+        for email in sorted_emails[0:num]:
             print(email)

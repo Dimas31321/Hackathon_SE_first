@@ -1,6 +1,7 @@
 from src.email import Email
 from pathlib import Path
 import logging
+import shutil
 
 class Manager:
     path = Path('out')
@@ -19,7 +20,7 @@ class Manager:
             logging.warning(f"{file_path} уже существует.")
             return
         file_path.parent.mkdir(parents=True, exist_ok=True)
-        source_path.copy(file_path)
+        shutil.copy(source_path, file_path)
     
     @staticmethod
     def remove_empty_dirs():
