@@ -89,3 +89,5 @@ for f_path in email_list:
             statistics[cat] = 1
     Manager.put(email)
     print(f"DONE: {f_path.name} is in {categories}")
+for cat, count in statistics.items():
+    print(f"    Category {cat} got {count} files...")
