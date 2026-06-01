@@ -27,5 +27,3 @@ for type_path in folder_path.glob("*.txt"):
 
         i += 1
 
-print(keywords)
-print(senders)
