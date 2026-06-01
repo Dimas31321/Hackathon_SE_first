@@ -15,7 +15,6 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
     encoding="utf-8"
 )
-from src.EmailClassifier.keywords import senders
 print("BEGIN") ## для отладки, потом убрать
 all_emails = []
 base = Path(".")
