@@ -6,8 +6,8 @@ import logging
 from src.email import Email
 from sklearn.metrics.pairwise import cosine_similarity 
 
-logging.getLogger("fastembed").setLevel(logging.WARNING)
-
+warnings.filterwarnings("ignore", category=UserWarning, module="fastembed")
+logging.getLogger("fastembed").setLevel(logging.CRITICAL)
 try:
     model = TextEmbedding(model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
 except:
@@ -26,7 +26,9 @@ class Query_sorter:
         self.email_embeddings = list(model.embed(email_texts))
 
     def query(self, query:str) -> list[Email]:
-        query_embedding = list(model.embed([query]))
+        if not query:
+            query = ''
+        query_embedding = list(model.embed([str(query)]))
 
         cos_similarities = cosine_similarity(query_embedding, self.email_embeddings).flatten()
 

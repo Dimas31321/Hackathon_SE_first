@@ -15,7 +15,6 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
     encoding="utf-8"
 )
-print("BEGIN") ## для отладки, потом убрать
 all_emails = []
 base = Path(".")
 type_path = base / "types"
@@ -70,7 +69,12 @@ if value == '0':
         message = input("Введите сообщение для классификации (exit для выхода): ").strip()
         if message.lower() == "exit" or message.lower() == "выход":
             break
-        num = int(input("Введите число сообщений что вы хотите увидеть: "))
+        try:
+            num = int(input("Введите число сообщений что вы хотите увидеть: "))
+            if num <= 0:
+                continue
+        except:
+            continue
         sorted_emails = query_sorter.query(message)
         print("Найдены следующие письма по теме запроса:")
         for email in sorted_emails[0:num]:
