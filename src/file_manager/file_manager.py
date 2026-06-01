@@ -1,4 +1,4 @@
-from email import Email
+from src.email import Email
 from pathlib import Path
 import logging
 
