@@ -8,11 +8,11 @@ services:
       - ./inbox:/app/inbox
       - ./types:/app/types
       - ./out:/app/out
-  expanded_version:
+  extended_version:
       build:
         context: .
         dockerfile: Dockerfile
-        target: expanded-app
+        target: extended-app
       volumes:
         - ./inbox:/app/inbox
         - ./types:/app/types

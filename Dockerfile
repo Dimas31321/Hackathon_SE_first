@@ -10,6 +10,8 @@ ENTRYPOINT ["./src/entrypoint.sh"]
 
 FROM lite-app AS extended-app
 
+RUN apk add --no-cache g++ gcc gfortran
+
 COPY extended_src ./extended_src
 RUN pip install --no-cache-dir -r extended_src/requirements.txt
 
