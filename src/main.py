@@ -25,7 +25,7 @@ for filename in os.listdir(Inbox):
         continue #проверка на всякий случай
     reader = EmailReader(filepath)
     email = reader.read_email()
-    if email in None:
+    if email is None:
         logging.error("     ERROR: не удалось прочитать")
         pass
     else:
