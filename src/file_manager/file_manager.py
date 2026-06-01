@@ -20,4 +20,10 @@ class Manager:
             return
         file_path.parent.mkdir(parents=True, exist_ok=True)
         source_path.copy(file_path)
-        
+    
+    @staticmethod
+    def remove_empty_dirs():
+        for category_dir in Manager.path.iterdir():
+            if category_dir.is_dir() and not any(category_dir.iterdir()):
+                category_dir.rmdir()
+                logging.info(f"Удалена пустая директория: {category_dir}")
