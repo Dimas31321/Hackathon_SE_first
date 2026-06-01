@@ -1,7 +1,12 @@
 """import os #работа с файлами и папками
 from email import Email #данные письма
+<<<<<<< HEAD
 from reader import EmailReader #считывает письма с файлов
 from src.file_manager.file_manager import Manager #раскладывает письма по папкам
+=======
+from reader.email_reader import EmailReader #считывает письма с файлов
+from file_manager.file_manager import Manager #раскладывает письма по папкам
+>>>>>>> 113f5686e8c18791bf7d37868bd211f86657f4f4
 import logging
 Inbox = "inbox"
 Types = "types"
@@ -22,17 +27,17 @@ failed_mails = []
 for filename in os.listdir(Inbox):
     filepath = os.path.join(Inbox, filename)
     if not os.path.isfile(filepath):
+        logging.error(f"'{filepath}' является директорией, а не файлом. Пропускаем.")
         continue #проверка на всякий случай
     reader = EmailReader(filepath)
     email = reader.read_email()
-    if email in None:
-        logging.error("     ERROR: не удалось прочитать")
+    if email is None:
+        logging.error("ERROR: ошика чтения письма из файла " + filepath)
         pass
     else:
-        print(f"    ACCEPT: from {email.sender}, theme: {email.theme}")
+        logging.info(f"ACCEPT: from {email.sender}, theme: {email.theme}")
         emails.append(email)
 for email in emails:
-    print(f"Got letter: {email.filename} \n")
     general_text = email.theme + " " + email.body
     scores = {}
     for cat_name, words in categories.items():
@@ -42,10 +47,10 @@ for email in emails:
                 count+=1
         if count>0:
             scores[cat_name] = count
-            #print(f"In category {cat_name} was found {count} words")
     if not scores:
         email.categories = ["Другое"]
     else:
+<<<<<<< HEAD
         best_variant = max(scores, key=scores.get())
 """
 import sys #работа с файлами и папками
@@ -91,3 +96,7 @@ for f_path in email_list:
     print(f"DONE: {f_path.name} is in {categories}")
 for cat, count in statistics.items():
     print(f"    Category {cat} got {count} files...")
+"""=======
+        best_variant = max(scores, key=scores.get)
+
+>>>>>>> 113f5686e8c18791bf7d37868bd211f86657f4f4"""
