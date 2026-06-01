@@ -3,7 +3,7 @@ import pytest
 from src.EmailClassifier.Rules.mailsenderrule import MailSenderRule
 from src.EmailClassifier.classifier import Classifier
 from src.EmailClassifier.Rules.keywordrule import KeywordRule
-from src.EmailClassifier.keywords import loadKeywords
+from src.EmailClassifier.keywords import loadKeywords, loadSenders
 from src.email import Email
 
 def create_test_email_by_text(sender: str, body: str):
@@ -48,9 +48,10 @@ def test_keywordLoad():
     text = """
     акция, акция, """
     testEmail = create_test_email_by_text("uniqueguy@company.com", text)
-    kw = loadKeywords()
-    keywordRule = KeywordRule(loadKeywords())
 
-    classifier = Classifier([keywordRule])
+    keywordRule = KeywordRule(loadKeywords())
+    senderRule = MailSenderRule(loadSenders())
+
+    classifier = Classifier([keywordRule, senderRule])
 
     assert classifier.classify(testEmail) == ["Спам"]
