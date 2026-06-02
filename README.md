@@ -35,3 +35,5 @@
 
 `docker compose run extended_version`
 
+### Тесты находятся в директории test
+
