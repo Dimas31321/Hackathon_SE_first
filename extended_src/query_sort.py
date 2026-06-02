@@ -3,6 +3,7 @@ os.environ["HF_HUB_OFFLINE"] = "1"
 
 from fastembed import TextEmbedding
 import logging
+import warnings
 from src.email import Email
 from sklearn.metrics.pairwise import cosine_similarity 
 
