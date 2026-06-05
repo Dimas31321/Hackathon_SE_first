@@ -18,6 +18,9 @@ class Classifier:
 
     def classify(self, email: Email):
         finalScore = dict()
+        
+        if email.categories:
+            return email.categories
 
         for rule in self.rules:
             score = rule.score(email)

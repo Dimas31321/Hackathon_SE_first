@@ -11,6 +11,7 @@ from src.EmailClassifier.keywords import loadKeywords, loadSenders
 import logging
 logging.basicConfig(
     filename="./out/main.log",
+    filemode= "w",
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     encoding="utf-8"
@@ -29,8 +30,8 @@ keyrules = KeywordRule(loadKeywords())
 senderrules = MailSenderRule(loadSenders())
 classifire = Classifier(rules = [keyrules, senderrules])
 classifire.min_value = 1
-classifire.a = 1
-email_list = email_list = (
+classifire.a = 0.1
+email_list =(
     list(inbox_path.glob("*.txt")) +
     list(inbox_path.glob("*.bin")) +
     list(inbox_path.glob("*.json")) +

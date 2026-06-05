@@ -28,8 +28,6 @@ def loadKeywords():
             keywords[name].append(lines[i].strip())
             i += 1
 
-
-            i += 1
     return keywords
 
 
@@ -49,7 +47,11 @@ def loadSenders():
         senders[name] = []
 
         i = 0
+        
         while i < len(lines):
+            if lines[i] == "":
+                i += 1
+                break
             i += 1
 
         while i < len(lines):

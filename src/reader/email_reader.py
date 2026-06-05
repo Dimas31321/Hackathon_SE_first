@@ -3,12 +3,7 @@ from src.email import Email
 from pathlib import Path
 import json
 import logging
-logging.basicConfig(
-    filename="email_reader.log",
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    encoding="utf-8"
-) # TODO: НЕ ЗАБЫТЬ УБРАТЬ!!!!!
+
 
 logger = logging.getLogger(__name__)
 class EmailReader:
@@ -37,8 +32,16 @@ class EmailReader:
                 f"Неподдерживаемый формат файла '{self.filename}'. "
                 f"Поддерживаются только .txt, .json и .bin."
             )
-            return None
-
+            e= Email(
+                sender="Unknown",
+                recipient="Unknown",
+                theme="No theme",
+                date="Unknown",
+                filename=self.filename,
+                body="")
+            e.add_category("Неверный формат")
+            return e
+        
         if data is None or len(data) == 0:
             return None
         else:
